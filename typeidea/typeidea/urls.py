@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from .custom_site import custom_site
-from blog.views import post_list, post_detail
+from blog.views import PostDetailView, TagView, IndexView, CategoryView
 from config.views import links
 
 """
@@ -26,15 +26,17 @@ from config.views import links
 3. 分类列表页：/category/<category_id>/
 4. 标签列表页：/tag/<tag_id>/
 5. 友链展示页：/links/
+
+reverse: 通过name反向解析出URL
 """
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^super_admin/', custom_site.urls),
-    url(r'^$', post_list),
-    url(r'^category/(?P<category_id>\d+)/$', post_list, name='category_list'),
-    url(r'^tag/(?P<tag_id>\d+)/$', post_list),
-    url(r'^post/(?P<post_id>\d+).html$', post_detail),
-    url(r'^links/$', links)
+    url(r'^admin/', admin.site.urls, name='admin'),
+    url(r'^super_admin/', custom_site.urls, name='super-admin'),
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^category/(?P<category_id>\d+)/$', CategoryView.as_view(), name='category-list'),
+    url(r'^tag/(?P<tag_id>\d+)/$', TagView.as_view(), name='tag-list'),
+    url(r'^post/(?P<post_id>\d+).html$', PostDetailView.as_view(), name='post-detail'),
+    url(r'^links/$', links, name='links')
 
 ]
